@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Retirada de Equipamentos CDT</title>
+  <title>Alocamento de Equipamentos para colaboradores CDT</title>
   
   <!-- Bootstrap CSS -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -89,7 +89,7 @@
     <!-- Título da página com o logo -->
     <div class="d-flex align-items-center justify-content-center mb-4">
       <img src="https://i.imgur.com/x38Il6U.png" alt="Logo" class="logo">
-      <h1>Retirada de Equipamentos para colaboradores CDT</h1>
+      <h1>Alocamento de Equipamentos para colaboradores CDT</h1>
     </div>
 
     <!-- Formulário para inserir dados da máquina -->
