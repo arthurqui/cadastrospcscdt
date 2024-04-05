@@ -26,6 +26,27 @@
       text-align: center;
     }
 
+    .topbar {
+      background-color: #183452;
+      color: #fff;
+      padding: 5px 20px; /* Ajuste da altura */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 0 0 10px 10px;
+    }
+
+    #administradorButton {
+      background-color: transparent;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    #administradorButton:hover {
+      text-decoration: underline;
+    }
+
     #form {
       background-color: #fff;
       padding: 20px;
@@ -49,9 +70,14 @@
       border: none;
     }
 
+    .enviar-btn {
+  background-color: #183452;
+}
+
+
     .table thead th {
       color: #fff;
-      background-color: #007bff;
+      background-color: #183452;
     }
 
     .table tbody tr:nth-child(even) {
@@ -59,7 +85,7 @@
     }
 
     button {
-      background-color: #007bff;
+      background-color: #1964b4;
       color: #fff;
       border: none;
       padding: 10px 20px;
@@ -68,29 +94,27 @@
     }
 
     button:hover {
-      background-color: #0056b3;
+      background-color: #183452;
     }
 
     /* Estilo para o logo */
     .logo {
-      margin-right: 20px;
-      max-width: 100px;
-      max-height: 100px;
+      max-width: 80px; /* Redução do tamanho do logo */
+      max-height: 50px; /* Redução do tamanho do logo */
     }
   </style>
 
-  <!-- Importar biblioteca jsPDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
-  <!-- Importar biblioteca html2pdf -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 </head>
 <body>
+  <!-- Topbar -->
+  <div class="topbar">
+    <img src="https://i.imgur.com/x38Il6U.png" alt="Logo" class="logo">
+    <button id="administradorButton" onclick="window.location.href='responsavel.html'">Administrador</button>
+  </div>
+
   <div class="container">
-    <!-- Título da página com o logo -->
-    <div class="d-flex align-items-center justify-content-center mb-4">
-      <img src="https://i.imgur.com/x38Il6U.png" alt="Logo" class="logo">
-      <h1>Retirada de Equipamentos para colaboradores CDT</h1>
-    </div>
+    <!-- Título da página -->
+    <h1>Retirada de Equipamentos para colaboradores CDT</h1>
 
     <!-- Formulário para inserir dados da máquina -->
     <form id="form">
@@ -129,7 +153,8 @@
         <textarea class="form-control" id="observacoes" placeholder="Se caso você queira deixar alguma observação e/ou sua máquina possua avarias ou defeitos descreva-os de maneira simples nesse campo..."></textarea>
       </div>
 
-      <button type="button" class="btn btn-primary" id="enviarButton">Enviar</button>
+      <button type="button" class="btn btn-primary enviar-btn" id="enviarButton">Enviar</button>
+
     </form>
 
     <!-- Tabela para exibir os dados cadastrados -->
