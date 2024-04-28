@@ -15,6 +15,15 @@
       font-family: Arial, sans-serif;
     }
 
+    .navbar {
+      background-color: #183452;
+    }
+
+    .navbar-brand,
+    .navbar-text {
+      color: white;
+    }
+
     .container {
       max-width: 1000px; /* Aumentando a largura da tabela */
       margin: 0 auto;
@@ -58,6 +67,7 @@
     .btn-excluir:hover {
       background-color: #c82333;
     }
+
   </style>
 
   <!-- Bootstrap JavaScript (opcional) -->
@@ -67,6 +77,20 @@
   
 </head>
 <body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <!-- Texto do Navbar -->
+      <span class="navbar-text mr-auto" id="userEmail"></span>
+
+      <!-- Botão Voltar -->
+      <a class="btn btn-secondary mr-2" href="index.html">Voltar</a>
+
+      <!-- Botão de Logout -->
+      <button id="logoutButton" class="btn btn-danger">Logout</button>
+    </div>
+  </nav>
+
   <div class="container">
     <!-- Título da página -->
     <div class="mb-4">
@@ -86,7 +110,7 @@
           <div class="modal-body">
             <div class="form-group">
               <label for="login">Login:</label>
-              <input type="text" class="form-control" id="login" required>
+              <input type="email" class="form-control" id="login" required>
             </div>
             <div class="form-group">
               <label for="senha">Senha:</label>
@@ -122,31 +146,29 @@
     </div>
   </div>
 
-  <!-- Bootstrap JavaScript (opcional) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
   <!-- Firebase JavaScript -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
     import { getDatabase, ref, onValue, remove } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js';
+    import { getAuth, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
 
-    // Cole suas credenciais do Firebase aqui
-    var firebaseConfig = {
+    // Configurações do Firebase
+    const firebaseConfig = {
       apiKey: "AIzaSyC41KIa9wdb3Vevjwno89SNt4U0vsPIaMo",
       authDomain: "bdkdb-e8ee5.firebaseapp.com",
       databaseURL: "https://bdkdb-e8ee5-default-rtdb.firebaseio.com",
       projectId: "bdkdb-e8ee5",
       storageBucket: "bdkdb-e8ee5.appspot.com",
-      messagingSenderId: "SEU_SENDER_ID",
-      appId: "SEU_APP_ID"
+      messagingSenderId: "129625246761",
+      appId: "1:129625246761:web:dbcabee42d53da7a422038",
+      measurementId: "G-WG2MJDR4Q9"
     };
 
-    // Inicialize o Firebase
+    // Inicialização do Firebase
     const firebaseApp = initializeApp(firebaseConfig);
+    const auth = getAuth(firebaseApp);
 
-    // Obtém uma referência para o nó 'maquinasCdt' no banco de dados
+    // Referência para o nó 'maquinasCdt' no banco de dados
     const database = getDatabase(firebaseApp);
     const maquinasCdtRef = ref(database, 'maquinasCdt');
 
@@ -180,20 +202,34 @@
     }
 
     // Função para excluir um registro do Firebase
-function excluirRegistro(key) {
-  if (confirm('Tem certeza que deseja excluir este registro?')) {
-    remove(ref(database, `maquinasCdt/${key}`))
-      .then(() => {
-        console.log('Registro excluído com sucesso!');
-        // Atualiza a tabela após a exclusão
-        atualizarTabela();
-      })
-      .catch((error) => {
-        console.error('Erro ao excluir registro:', error);
-      });
-  }
-}
+    function excluirRegistro(key) {
+      if (confirm('Tem certeza que deseja excluir este registro?')) {
+        remove(ref(database, `maquinasCdt/${key}`))
+          .then(() => {
+            console.log('Registro excluído com sucesso!');
+            // Atualiza a tabela após a exclusão
+            atualizarTabela();
+          })
+          .catch((error) => {
+            console.error('Erro ao excluir registro:', error);
+          });
+      }
+    }
 
+    // Função para fazer logout do usuário
+    function fazerLogout() {
+      signOut(auth)
+        .then(() => {
+          // Limpa os dados salvos na sessão
+          sessionStorage.removeItem('loggedIn');
+          sessionStorage.removeItem('userEmail');
+          // Redireciona para a página index.html
+          window.location.href = 'index.html';
+        })
+        .catch((error) => {
+          console.error('Erro ao fazer logout:', error);
+        });
+    }
 
     // Função para atualizar a tabela com os dados do Firebase
     function atualizarTabela() {
@@ -205,23 +241,46 @@ function excluirRegistro(key) {
       });
     }
 
-    // Verifica o login e senha
-    function verificarLogin() {
-      const login = document.getElementById('login').value;
-      const senha = document.getElementById('senha').value;
-      if (login === 'admin' && senha === 'cdt') {
+    // Função para verificar a autenticação do usuário
+    function verificarAutenticacao() {
+      const loggedIn = sessionStorage.getItem('loggedIn');
+      if (loggedIn === 'true') {
+        const email = sessionStorage.getItem('userEmail');
+        document.getElementById('userEmail').textContent = email;
         $('#loginModal').modal('hide');
         atualizarTabela();
       } else {
-        alert('Login ou senha inválidos.');
+        $('#loginModal').modal('show');
       }
+    }
+
+    // Função para verificar o login e senha
+    function verificarLogin() {
+      const email = document.getElementById('login').value;
+      const senha = document.getElementById('senha').value;
+      signInWithEmailAndPassword(auth, email, senha)
+        .then(() => {
+          $('#loginModal').modal('hide');
+          atualizarTabela();
+          // Exibir o email do usuário no navbar
+          document.getElementById('userEmail').textContent = email;
+          // Armazenar dados de login na sessão
+          sessionStorage.setItem('loggedIn', 'true');
+          sessionStorage.setItem('userEmail', email);
+        })
+        .catch((error) => {
+          alert('Falha ao fazer login: ' + error.message);
+        });
     }
 
     // Atualiza a tabela inicialmente ao carregar a página
     $(document).ready(function() {
-      $('#loginModal').modal('show');
+      verificarAutenticacao();
       $('#loginButton').click(function() {
         verificarLogin();
+      });
+      $('#logoutButton').click(function() {
+        fazerLogout();
       });
     });
   </script>
