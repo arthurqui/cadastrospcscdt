@@ -242,12 +242,12 @@
      alert('Dados enviados com sucesso!');
          // Gerar e baixar o PDF
        gerarPDF(maquinaData);
-      //})
-      //.catch((error) => {
-      // console.error('Erro ao enviar dados:', error);
-      // alert('Ocorreu um erro ao enviar os dados para o banco, esse emprestimo não terá registro além da folha.');
+      })
+      .catch((error) => {
+       console.error('Erro ao enviar dados:', error);
+      alert('Ocorreu um erro ao enviar os dados para o banco, esse emprestimo não terá registro além da folha.');
       gerarPDF(maquinaData);
-      //});
+      });
    }
 
     // Função para gerar e baixar o PDF
